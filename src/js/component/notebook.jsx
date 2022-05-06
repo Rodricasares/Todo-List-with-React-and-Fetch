@@ -14,21 +14,41 @@ const Note = () => {
 		setText(event.target.value);
 	};
 	// const Delete the list of task
-	const Delete = (item) =>
+
+	const Delete = (item) => {
 		setTask(task.filter((deleteMe) => item != deleteMe));
-	//const Save Task
-	const Save = () => {
-		setTask([...task, { label: text, done: false }]);
-		// ESTE FETCH RETORNA EL API CON LAS TAREAS ALMACENADAS  DESPUES DE ACTUALIZAR LA PAG.
 		fetch("https://assets.breatheco.de/apis/fake/todos/user/rodricasares", {
 			method: "PUT",
-			body: JSON.stringify([...task, { label: text, done: false }]),
+			body: JSON.stringify(task.filter((deleteMe) => item != deleteMe)),
 			headers: {
 				"Content-Type": "application/json",
 			},
 		});
 	};
-
+	//const Save Task
+	const Save = () => {
+		if (
+			!task.map((item) => item.label).includes(text) &&
+			text.trim() != ""
+		) {
+			setTask([...task, { label: text, done: false }]);
+			//  Retorna la API con las tareas almacenadas  despues de actualizar la pagina
+			fetch(
+				"https://assets.breatheco.de/apis/fake/todos/user/rodricasares",
+				{
+					method: "PUT",
+					body: JSON.stringify([
+						...task,
+						{ label: text, done: false },
+					]),
+					headers: {
+						"Content-Type": "application/json",
+					},
+				}
+			);
+			setText("");
+		}
+	};
 	///
 	useEffect(() => {
 		fetch("https://assets.breatheco.de/apis/fake/todos/user/rodricasares")
@@ -41,13 +61,14 @@ const Note = () => {
 	return (
 		<div className="container my-5">
 			<div className="row">
-				<h1 className="row m-3">
-					Todo List with React, Fetch and Bootstrap
-				</h1>
+				<div className="d-flex justify-content-between p-2">
+					<h1>Todo List with React, Fetch and Bootstrap</h1>
+					<h5 className="p-3">Total Tasks: {task.length}</h5>
+				</div>
 				<div className="input-group mb-3">
 					<img
 						src="https://storage.googleapis.com/4geeks-academy-website/blog/2016/04/logo1-01-02.png"
-						class="img-thumbnail"
+						className="img-thumbnail"
 						alt="Bootstrap"
 						width="300"
 						height="100"
@@ -57,12 +78,14 @@ const Note = () => {
 						placeholder="Writte your task here"
 						aria-label="Re"
 						type="text"
+						value={text}
 						onChange={handleChange}
 					/>
 					<button
 						type="button"
-						class="btn btn-outline-success"
-						onClick={Save}>
+						className="btn btn-outline-success"
+						onClick={Save}
+						value={text}>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							width="16"
@@ -79,27 +102,28 @@ const Note = () => {
 				<div className="row align-items-center">
 					<div className="col border border-2 rounded-bottom ">
 						<ul className="list-group list-group-flush mb-3">
-							{task.map((value, index) => (
-								<li
-									className="list-group-item pb-3"
-									key={index}>
-									{value.label}
-									<button
-										type="button"
-										className="btn btn-outline-danger float-end"
-										onClick={() => Delete(value)}>
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											width="16"
-											height="16"
-											fill="currentColor"
-											className="bi bi-trash-fill"
-											viewBox="0 0 16 16">
-											<path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
-										</svg>
-									</button>
-								</li>
-							))}
+							{task.length > 0 &&
+								task.map((value, index) => (
+									<li
+										className="list-group-item pb-3"
+										key={index}>
+										{value.label}
+										<button
+											type="button"
+											className="btn btn-outline-danger float-end"
+											onClick={() => Delete(value)}>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												width="16"
+												height="16"
+												fill="currentColor"
+												className="bi bi-trash-fill"
+												viewBox="0 0 16 16">
+												<path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+											</svg>
+										</button>
+									</li>
+								))}
 						</ul>
 					</div>
 				</div>

@@ -12,9 +12,6 @@
     import 'relative/path/to/stylesheet.scss';
 
 
-
-.body {
-
-background-color: grey;
-}
 */
+body{
+    background-image: url("https://fondosmil.com/fondo/52714.jpg");}

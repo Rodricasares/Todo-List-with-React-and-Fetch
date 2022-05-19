@@ -50,11 +50,11 @@ const Note = () => {
 		}
 	};
 	///
-	useEffect(() => {
+	useEffect((e) => {
 		fetch("https://assets.breatheco.de/apis/fake/todos/user/rodricasares")
 			.then((resp) => resp.json())
 			.then((result) => {
-				setTask(result);
+				setTask(resp.result);
 			});
 	}, []);
 
@@ -62,8 +62,12 @@ const Note = () => {
 		<div className="container my-5">
 			<div className="row">
 				<div className="d-flex justify-content-between p-2">
-					<h1>Todo List with React, Fetch and Bootstrap</h1>
-					<h5 className="p-3">Total Tasks: {task.length}</h5>
+					<h1 className="text-dark ms-4">
+						Todo List with React, Fetch and Bootstrap
+					</h1>
+					<h5 className="text-white p-3">
+						Total Tasks: {task.length}
+					</h5>
 				</div>
 				<div className="input-group mb-3">
 					<img
@@ -78,8 +82,13 @@ const Note = () => {
 						placeholder="Writte your task here"
 						aria-label="Re"
 						type="text"
-						value={text}
 						onChange={handleChange}
+						value={text}
+						onKeyDown={(e) => {
+							{
+								e.key === "Enter" ? Save(e) : "";
+							}
+						}}
 					/>
 					<button
 						type="button"
@@ -101,12 +110,15 @@ const Note = () => {
 			<div className="container mb-3">
 				<div className="row align-items-center">
 					<div className="col border border-2 rounded-bottom ">
-						<ul className="list-group list-group-flush mb-3">
+						<ul className="list-group list-group-flush my-3">
 							{task.length > 0 &&
 								task.map((value, index) => (
 									<li
-										className="list-group-item pb-3"
+										className="list-group-item mb-3"
 										key={index}>
+										<h6 className="text-primary">
+											New task: {index + 1}
+										</h6>
 										{value.label}
 										<button
 											type="button"
@@ -124,6 +136,19 @@ const Note = () => {
 										</button>
 									</li>
 								))}
+							{task.length === 0 ? (
+								<div
+									className="alert alert-success mt-3"
+									role="alert">
+									Great Job !!! You can go at home !!!
+								</div>
+							) : (
+								<div
+									className="alert alert-danger mt-3"
+									role="alert">
+									You have job hard... take your time.
+								</div>
+							)}
 						</ul>
 					</div>
 				</div>
